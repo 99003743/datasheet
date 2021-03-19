@@ -1,0 +1,37 @@
+import pandas as pd
+from openpyxl import load_workbook
+#j=str(input("enter name"))
+#k = str(input("enter email id"))
+n=int(input("enter ps number"))
+p=input("name: ")
+q=input("gmail: ")
+sheet_name=['Sheet1', 'Sheet2', 'Sheet3', 'Sheet4', 'Sheet5']
+s=pd.read_excel('sample.xlsx', sheet_name)
+y=s['Sheet1']
+y=y[y['number'] == n]
+y=y[y['gmail'] == q]
+y=y[y['name'] == p]
+df = pd.DataFrame(y, columns=['number', 'gmail', 'name'])
+for i in s.keys():
+    x=s[i]
+    t = x[x['number'] == n]
+    t = x[x['gmail'] == q]
+    t = x[x['name'] == p]
+    col = x.columns
+    for j in col:
+        df[j]=t[j]
+#df.to_excel('pythonexcel1.xlsx',sheet_name='master',index=False)
+path = "sample.xlsx"
+book = load_workbook(path)
+writer = pd.ExcelWriter(path, engine='openpyxl')
+writer.book = book
+# searching for the master sheet in all sheets
+if 'MasterSheet' in book.sheetnames:
+    ref = book['MasterSheet']
+    # removing the previous data in the sheet
+    book.remove(ref)
+    # writing the data into the master sheet
+df.to_excel(writer, sheet_name='MasterSheet')
+# saving  the data in the master sheet
+writer.save()
+writer.close()
