@@ -1,0 +1,37 @@
+import pandas as pd
+# import numpy as np
+from openpyxl import load_workbook
+# import openpyxl
+excel_file = pd.ExcelFile('sample.xlsx')
+df_mini_first = pd.read_excel(excel_file, sheet_name=1)
+df_mini_second = pd.read_excel(excel_file, sheet_name=2)
+df_mini_third = pd.read_excel(excel_file, sheet_name=3)
+df_mini_fourth = pd.read_excel(excel_file, sheet_name=4)
+df_mini_fifth = pd.read_excel(excel_file, sheet_name=5)
+f3 = df_mini_first.merge(df_mini_second,  on="number", how="left")
+f4 = f3.merge(df_mini_third, on="number", how="left")
+f5 = f4.merge(df_mini_fourth, on="number", how="left")
+f6 = f5.merge(df_mini_fifth, on="number", how="left")
+Input =int(input("number"))
+df_Input = pd.DataFrame(f6, columns=['number', 'name', 'gmail', 'designation', 'domain', 'location', 'stream', 'floor',
+                                     'mentor', 'seat no', 'bus no', 'temp', 'blood group', 'weight(kg)', 'height(m)',
+                                     'covid symptoms', 'status of health', 'phone no.', 'alternate phn',
+                                     'bank acc',  'aadhar no.', 'pan no.',
+                                     'native place', 'pincode', 'dob', 'age', 'gender',
+                                     'religion', 'marital status', 'bank name',
+                                     'type of bank acc', 'b.tech %', 'university',
+                                     'loc', 'inter %', 'college', 'X th  %', 'school'])
+# print(pf_variable)
+df_Input.set_index('number', inplace=True)
+result = df_Input.loc[Input]
+print(result)
+path = "sample.xlsx"
+book = load_workbook(path)
+writer = pd.ExcelWriter(path, engine='openpyxl')
+writer.book = book
+if 'Master' in book.sheetnames:
+    ref = book['Master']
+    book.remove(ref)
+result.to_excel(writer, sheet_name='Master')
+writer.save()
+writer.close()
